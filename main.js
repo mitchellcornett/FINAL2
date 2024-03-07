@@ -29,6 +29,14 @@ heroImage.onload = function () {
 };
 heroImage.src = "images/ship.png";
 
+// hero object flipped
+let heroFlippedReady = false;
+let heroFlippedImage = new Image();
+heroFlippedImage.onload = function () {
+    heroFlippedReady = true;
+};
+heroFlippedImage.src = "images/ship-flipped.png";
+
 // create monster image object and check if monster image is loaded
 let monsterReady = false;
 let monsterImage = new Image();
@@ -36,6 +44,13 @@ monsterImage.onload = function () {
     monsterReady = true;
 };
 monsterImage.src = "images/chest.png";
+
+// SOUNDS GO HERE
+let soundTreasure = "sounds/treasure.wav";
+let soundFx = document.getElementById("soundFX");
+
+// SHIP ORIENTATION
+let reverseShipSprite = false;
 
 // draw everything in main render function
 let render = function () {
@@ -46,7 +61,11 @@ let render = function () {
         context.drawImage(edgeImage, 0, 0);
     }
     if (heroReady) {
-        context.drawImage(heroImage, hero.x, hero.y);
+        if (reverseShipSprite === false){
+            context.drawImage(heroImage, hero.x, hero.y);
+        } else {
+            context.drawImage(heroFlippedImage, hero.x, hero.y);
+        }
     }
     if (monsterReady) {
         context.drawImage(monsterImage, monster.x, monster.y);
@@ -113,13 +132,15 @@ let update = function (modifier) {
     if (38 in keysDown && hero.y > 32) { //  holding up key
         hero.y -= hero.speed * modifier;
     }
-    if (40 in keysDown && hero.y < canvas.height - (64)) { //  holding down key
+    if (40 in keysDown && hero.y < canvas.height - (64)) { //  holding down key 
         hero.y += hero.speed * modifier;
     }
     if (37 in keysDown && hero.x > (32)) { // holding left key
+        reverseShipSprite = false;
         hero.x -= hero.speed * modifier;
     }
     if (39 in keysDown && hero.x < canvas.width - (64)) { // holding right key
+        reverseShipSprite = true;
         hero.x += hero.speed * modifier;
     }
     
@@ -130,6 +151,8 @@ let update = function (modifier) {
         && hero.y <= (monster.y + 32)
         && monster.y <= (hero.y + 32)
     ) {
+        soundFx.src = soundTreasure;
+        soundFx.play();
         ++monstersCaught; // increase player score
         reset(); // restart game
     }
