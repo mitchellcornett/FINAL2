@@ -11,7 +11,15 @@ let backgroundImage = new Image();
 backgroundImage.onload = function () {
     backgroundReady = true;
 };
-backgroundImage.src = "images/background.jpg";
+backgroundImage.src = "images/background_new.png";
+
+// create edge image and check if image is loaded
+let edgeReady = false;
+let edgeImage = new Image();
+edgeImage.onload = function() {
+    edgeReady = true;
+}
+edgeImage.src = "images/edge.png"
 
 // create hero image object and check if hero image is loaded
 let heroReady = false;
@@ -19,7 +27,7 @@ let heroImage = new Image();
 heroImage.onload = function () {
     heroReady = true;
 };
-heroImage.src = "images/hero.png";
+heroImage.src = "images/ship.png";
 
 // create monster image object and check if monster image is loaded
 let monsterReady = false;
@@ -27,12 +35,15 @@ let monsterImage = new Image();
 monsterImage.onload = function () {
     monsterReady = true;
 };
-monsterImage.src = "images/monster.png";
+monsterImage.src = "images/chest.png";
 
 // draw everything in main render function
 let render = function () {
     if (backgroundReady) {
         context.drawImage(backgroundImage, 0, 0);
+    }
+    if (edgeReady) {
+        context.drawImage(edgeImage, 0, 0);
     }
     if (heroReady) {
         context.drawImage(heroImage, hero.x, hero.y);
@@ -46,7 +57,7 @@ let render = function () {
     context.font = "24px Helvetica";
     context.textAlign = "left";
     context.textBaseline = "top";
-    context.fillText("Monsters caught: " + monstersCaught, 32, 32);
+    context.fillText("Treasure Collected: " + monstersCaught, 32, 32);
 }
 
 // create hero object
