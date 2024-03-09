@@ -21,29 +21,37 @@ edgeImage.onload = function() {
 }
 edgeImage.src = "images/edge.png"
 
-// create hero image object and check if hero image is loaded
-let heroReady = false;
-let heroImage = new Image();
-heroImage.onload = function () {
-    heroReady = true;
+// create ship image object and check if ship image is loaded
+let shipReady = false;
+let shipImage = new Image();
+shipImage.onload = function () {
+    shipReady = true;
 };
-heroImage.src = "images/ship.png";
+shipImage.src = "images/ship.png";
 
-// hero object flipped
-let heroFlippedReady = false;
-let heroFlippedImage = new Image();
-heroFlippedImage.onload = function () {
-    heroFlippedReady = true;
+// ship object flipped
+let shipFlippedReady = false;
+let shipFlippedImage = new Image();
+shipFlippedImage.onload = function () {
+    shipFlippedReady = true;
 };
-heroFlippedImage.src = "images/ship-flipped.png";
+shipFlippedImage.src = "images/ship-flipped.png";
 
-// create monster image object and check if monster image is loaded
-let monsterReady = false;
-let monsterImage = new Image();
-monsterImage.onload = function () {
-    monsterReady = true;
+// create treasure image object and check if treasure image is loaded
+let treasureReady = false;
+let treasureImage = new Image();
+treasureImage.onload = function () {
+    treasureReady = true;
 };
-monsterImage.src = "images/chest.png";
+treasureImage.src = "images/chest.png";
+
+// create shark image and check if loaded
+let sharkReady = false;
+let sharkImage = new Image();
+sharkImage.onload = function() {
+    sharkReady = true;
+};
+sharkImage.src = "images/shark.png";
 
 // SOUNDS GO HERE
 let soundTreasure = "sounds/treasure.wav";
@@ -60,15 +68,18 @@ let render = function () {
     if (edgeReady) {
         context.drawImage(edgeImage, 0, 0);
     }
-    if (heroReady) {
+    if (shipReady) {
         if (reverseShipSprite === false){
-            context.drawImage(heroImage, hero.x, hero.y);
+            context.drawImage(shipImage, ship.x, ship.y);
         } else {
-            context.drawImage(heroFlippedImage, hero.x, hero.y);
+            context.drawImage(shipFlippedImage, ship.x, ship.y);
         }
     }
-    if (monsterReady) {
-        context.drawImage(monsterImage, monster.x, monster.y);
+    if (sharkReady) {
+        context.drawImage(sharkImage, shark.x, shark.y);
+    }
+    if (treasureReady) {
+        context.drawImage(treasureImage, treasure.x, treasure.y);
     }
 
     // display player score
@@ -76,18 +87,25 @@ let render = function () {
     context.font = "24px Helvetica";
     context.textAlign = "left";
     context.textBaseline = "top";
-    context.fillText("Treasure Collected: " + monstersCaught, 32, 32);
+    context.fillText("Treasure Collected: " + treasureCaught, 32, 32);
 }
 
-// create hero object
-let hero = {
+// create ship object
+let ship = {
     speed: 256,
     x: 0,
     y: 0
 };
 
-//create monster object
-let monster = {
+//create treasure object
+let treasure = {
+    x: 0,
+    y: 0
+};
+
+// create shark object
+let shark = {
+    speed: 212,
     x: 0,
     y: 0
 };
@@ -102,16 +120,18 @@ let main = function () {
     requestAnimationFrame(main);
 };
 
-// reset the game when monster is caught
+// reset the game when treasure is caught
 let reset = function () {
-    hero.x = (canvas.width / 2) - 16;
-    hero.y = (canvas.height / 2) - 16;
-    monster.x = 32 + (Math.random() * (canvas.width - 96));
-    monster.y = 32 + (Math.random() * (canvas.height - 96));
+    ship.x = (canvas.width / 2) - 16;
+    ship.y = (canvas.height / 2) - 16;
+    treasure.x = 32 + (Math.random() * (canvas.width - 96));
+    treasure.y = 32 + (Math.random() * (canvas.height - 96));
 };
 
+
+
 // create player score
-let monstersCaught = 0;
+let treasureCaught = 0;
 
 // handle keyboard inputs
 let keysDown = {};
@@ -128,35 +148,60 @@ addEventListener("keyup", function (e) {
 
 // move game objects when keys are preseed
 let update = function (modifier) {
-    // check if hero is at the border
-    if (38 in keysDown && hero.y > 32) { //  holding up key
-        hero.y -= hero.speed * modifier;
+    // check if ship is at the border
+    if (38 in keysDown && ship.y > 32) { //  holding up key
+        ship.y -= ship.speed * modifier;
     }
-    if (40 in keysDown && hero.y < canvas.height - (64)) { //  holding down key 
-        hero.y += hero.speed * modifier;
+    if (40 in keysDown && ship.y < canvas.height - (64)) { //  holding down key 
+        ship.y += ship.speed * modifier;
     }
-    if (37 in keysDown && hero.x > (32)) { // holding left key
+    if (37 in keysDown && ship.x > (32)) { // holding left key
         reverseShipSprite = false;
-        hero.x -= hero.speed * modifier;
+        ship.x -= ship.speed * modifier;
     }
-    if (39 in keysDown && hero.x < canvas.width - (64)) { // holding right key
+    if (39 in keysDown && ship.x < canvas.width - (64)) { // holding right key
         reverseShipSprite = true;
-        hero.x += hero.speed * modifier;
+        ship.x += ship.speed * modifier;
     }
     
-     // check if hero and monster are touching
-     if (
-        hero.x <= (monster.x + 32)
-        && monster.x <= (hero.x + 32)
-        && hero.y <= (monster.y + 32)
-        && monster.y <= (hero.y + 32)
-    ) {
+     // check if ship and treasure are touching
+    if (
+        ship.x <= (treasure.x + 32)
+        && treasure.x <= (ship.x + 32)
+        && ship.y <= (treasure.y + 32)
+        && treasure.y <= (ship.y + 32)
+        ) 
+    {
         soundFx.src = soundTreasure;
         soundFx.play();
-        ++monstersCaught; // increase player score
-        reset(); // restart game
+        ++treasureCaught; // increase player score
+        
+        // reset treasure position
+        treasure.x = 32 + (Math.random() * (canvas.width - 96));
+        treasure.y = 32 + (Math.random() * (canvas.height - 96));
     }
+    moveShark(modifier);
 };
+
+// function that moves the shark
+let moveShark = function(modifier) {
+    console.log(shark.x, shark.y)
+
+    let vector_x = 0.0;
+    let vector_y = 0.0;
+    vector_x = ship.x - shark.x;
+    vector_y = ship.y - shark.y;
+    
+    let unitVector_x = 0.0;
+    let unitVector_y = 0.0;
+    let vector_magnitude = 0.0;
+
+    vector_magnitude = Math.sqrt(Math.pow(vector_x, 2) + Math.pow(vector_y, 2));
+    unitVector_x = vector_x / vector_magnitude;
+    unitVector_y = vector_y / vector_magnitude;
+    shark.x += unitVector_x * (shark.speed * modifier);
+    shark.y += unitVector_y * (shark.speed * modifier);
+}
 
 // start the game
 let then = Date.now();
