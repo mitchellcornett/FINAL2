@@ -105,10 +105,13 @@ let treasure = {
 
 // create shark object
 let shark = {
-    speed: 212,
+    speed: 125,
     x: 0,
     y: 0
 };
+
+// create player score
+let treasureCaught = 0;
 
 // main game loop
 let main = function () {
@@ -120,18 +123,28 @@ let main = function () {
     requestAnimationFrame(main);
 };
 
+// show the user an alert when time runs out
+let gameOver = function() {
+    if (treasureCaught > 1) {
+        alert("Time is up! You found " + treasureCaught + " treasure chests. Refresh to play again.");
+    }
+    else if (treasureCaught = 1) {
+        alert("Time is up! You found " + treasureCaught + " treasure chest. Refresh to play again.");
+    }
+    else {
+        alert("Time is up! You didn't find any treasure chests. Refresh to play again.");
+    }
+}
+
 // reset the game when treasure is caught
 let reset = function () {
     ship.x = (canvas.width / 2) - 16;
     ship.y = (canvas.height / 2) - 16;
     treasure.x = 32 + (Math.random() * (canvas.width - 96));
     treasure.y = 32 + (Math.random() * (canvas.height - 96));
+
+    setTimeout(gameOver, 10000); // 1 second = 1000 milliseconds
 };
-
-
-
-// create player score
-let treasureCaught = 0;
 
 // handle keyboard inputs
 let keysDown = {};
@@ -185,7 +198,6 @@ let update = function (modifier) {
 
 // function that moves the shark
 let moveShark = function(modifier) {
-    console.log(shark.x, shark.y)
 
     let vector_x = 0.0;
     let vector_y = 0.0;
