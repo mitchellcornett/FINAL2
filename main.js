@@ -128,7 +128,7 @@ let gameOver = function() {
     if (treasureCaught > 1) {
         alert("Time is up! You found " + treasureCaught + " treasure chests. Refresh to play again.");
     }
-    else if (treasureCaught = 1) {
+    else if (treasureCaught == 1) {
         alert("Time is up! You found " + treasureCaught + " treasure chest. Refresh to play again.");
     }
     else {
