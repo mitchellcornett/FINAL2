@@ -87,7 +87,7 @@ let render = function () {
     context.font = "24px Helvetica";
     context.textAlign = "left";
     context.textBaseline = "top";
-    context.fillText("Treasure Collected: " + treasureCaught, 32, 32);
+    context.fillText("Treasure Collected: " + treasureCaught + " Time left: " + (timeRemaining / 1000), 32, 32);
 }
 
 // create ship object
@@ -120,20 +120,46 @@ let main = function () {
     update(delta / 1000);
     render();
     then = now;
-    requestAnimationFrame(main);
+    if (timeRemaining > 0) {
+        requestAnimationFrame(main);
+    }
+    else {
+        gameOver();
+    }
 };
+
+let startingTime = 10000; // 1 second = 1000 milliseconds
+
+let timeRemaining = startingTime;
 
 // show the user an alert when time runs out
 let gameOver = function() {
+
+    let gameOverHeader = document.createElement("h1")
+
     if (treasureCaught > 1) {
-        alert("Time is up! You found " + treasureCaught + " treasure chests. Refresh to play again.");
+        gameOverHeader.innerText="Time is up! You found " + treasureCaught + " treasure chests. Refresh to play again.";
     }
     else if (treasureCaught == 1) {
-        alert("Time is up! You found " + treasureCaught + " treasure chest. Refresh to play again.");
+        gameOverHeader.innerText="Time is up! You found " + treasureCaught + " treasure chest. Refresh to play again.";
     }
     else {
-        alert("Time is up! You didn't find any treasure chests. Refresh to play again.");
+        gameOverHeader.innerText="Time is up! You didn't find any treasure chests. Refresh to play again.";
     }
+
+    document.body.appendChild(gameOverHeader);
+}
+
+let decreaseTimeRemaining = function() {
+    
+    setInterval(function() {
+        if (timeRemaining > 0) {
+            timeRemaining = timeRemaining - 1000
+        }
+        else {
+            timeRemaining = 0;
+        }
+    }, 1000);
 }
 
 // reset the game when treasure is caught
@@ -143,7 +169,7 @@ let reset = function () {
     treasure.x = 32 + (Math.random() * (canvas.width - 96));
     treasure.y = 32 + (Math.random() * (canvas.height - 96));
 
-    setTimeout(gameOver, 10000); // 1 second = 1000 milliseconds
+    decreaseTimeRemaining();
 };
 
 // handle keyboard inputs
