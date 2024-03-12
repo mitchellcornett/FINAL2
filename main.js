@@ -124,7 +124,9 @@ let main = function () {
         requestAnimationFrame(main);
     }
     else {
-        gameOver();
+        if (!shipCaught){
+            gameOver();
+        }
     }
 };
 
@@ -132,20 +134,30 @@ let startingTime = 10000; // 1 second = 1000 milliseconds
 
 let timeRemaining = startingTime;
 
+let shipCaught = false;
+
 // show the user an alert when time runs out
 let gameOver = function() {
 
     let gameOverHeader = document.createElement("h1")
 
+    if (shipCaught){
+        gameOverHeader.innerText="You were caught! ";
+        timeRemaining = 0;
+    } else {
+        gameOverHeader.innerText="Time is up! "; 
+    }
+
     if (treasureCaught > 1) {
-        gameOverHeader.innerText="Time is up! You found " + treasureCaught + " treasure chests. Refresh to play again.";
+        gameOverHeader.innerText += "You found " + treasureCaught + " treasure chests. Refresh to play again.";
     }
     else if (treasureCaught == 1) {
-        gameOverHeader.innerText="Time is up! You found " + treasureCaught + " treasure chest. Refresh to play again.";
+        gameOverHeader.innerText += "You found " + treasureCaught + " treasure chest. Refresh to play again.";
     }
     else {
-        gameOverHeader.innerText="Time is up! You didn't find any treasure chests. Refresh to play again.";
+        gameOverHeader.innerText += "You didn't find any treasure chests. Refresh to play again.";
     }
+
 
     document.body.appendChild(gameOverHeader);
 }
@@ -219,7 +231,21 @@ let update = function (modifier) {
         treasure.x = 32 + (Math.random() * (canvas.width - 96));
         treasure.y = 32 + (Math.random() * (canvas.height - 96));
     }
+    
+    //move the shark
     moveShark(modifier);
+
+    // check if the shark and ship are touching
+    if (
+        ship.x <= (shark.x + 32)
+        && shark.x <= (ship.x + 32)
+        && ship.y <= (shark.y + 32)
+        && shark.y <= (ship.y + 32)
+        )
+    {
+        shipCaught = true;
+        gameOver();
+    }
 };
 
 // function that moves the shark
