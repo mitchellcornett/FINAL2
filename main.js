@@ -79,7 +79,8 @@ let render = function () {
         context.drawImage(sharkImage, shark.x, shark.y);
     }
     if (treasureReady) {
-        context.drawImage(treasureImage, treasure.x, treasure.y);
+        context.drawImage(treasureImage, treasure1.x, treasure1.y);
+        context.drawImage(treasureImage, treasure2.x, treasure2.y);
     }
 
     // display player score
@@ -97,8 +98,14 @@ let ship = {
     y: 0
 };
 
-//create treasure object
-let treasure = {
+//create first treasure object
+let treasure1 = {
+    x: 0,
+    y: 0
+};
+
+//create second treasure object
+let treasure2 = {
     x: 0,
     y: 0
 };
@@ -178,8 +185,10 @@ let decreaseTimeRemaining = function() {
 let reset = function () {
     ship.x = (canvas.width / 2) - 16;
     ship.y = (canvas.height / 2) - 16;
-    treasure.x = 32 + (Math.random() * (canvas.width - 96));
-    treasure.y = 32 + (Math.random() * (canvas.height - 96));
+    treasure1.x = 32 + (Math.random() * (canvas.width - 96));
+    treasure1.y = 32 + (Math.random() * (canvas.height - 96));
+    treasure2.x = 32 + (Math.random() * (canvas.width - 96));
+    treasure2.y = 32 + (Math.random() * (canvas.height - 96));
 
     decreaseTimeRemaining();
 };
@@ -215,12 +224,12 @@ let update = function (modifier) {
         ship.x += ship.speed * modifier;
     }
     
-     // check if ship and treasure are touching
+    // check if ship and first treasure are touching
     if (
-        ship.x <= (treasure.x + 32)
-        && treasure.x <= (ship.x + 32)
-        && ship.y <= (treasure.y + 32)
-        && treasure.y <= (ship.y + 32)
+        ship.x <= (treasure1.x + 32)
+        && treasure1.x <= (ship.x + 32)
+        && ship.y <= (treasure1.y + 32)
+        && treasure1.y <= (ship.y + 32)
         ) 
     {
         soundFx.src = soundTreasure;
@@ -228,8 +237,25 @@ let update = function (modifier) {
         ++treasureCaught; // increase player score
         
         // reset treasure position
-        treasure.x = 32 + (Math.random() * (canvas.width - 96));
-        treasure.y = 32 + (Math.random() * (canvas.height - 96));
+        treasure1.x = 32 + (Math.random() * (canvas.width - 96));
+        treasure1.y = 32 + (Math.random() * (canvas.height - 96));
+    }
+
+    // check if ship and second treasure are touching
+    if (
+        ship.x <= (treasure2.x + 32)
+        && treasure2.x <= (ship.x + 32)
+        && ship.y <= (treasure2.y + 32)
+        && treasure2.y <= (ship.y + 32)
+        ) 
+    {
+        soundFx.src = soundTreasure;
+        soundFx.play();
+        ++treasureCaught; // increase player score
+        
+        // reset treasure position
+        treasure2.x = 32 + (Math.random() * (canvas.width - 96));
+        treasure2.y = 32 + (Math.random() * (canvas.height - 96));
     }
     
     //move the shark
