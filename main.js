@@ -45,6 +45,14 @@ treasureImage.onload = function () {
 };
 treasureImage.src = "images/chest.png";
 
+let treasureReady_2 = false;
+let treasureImage_2 = new Image();
+treasureImage_2.onload = function () {
+    treasureReady_2 = true;
+};
+treasureImage_2.src = "images/chest_2.png";
+
+
 // create shark image and check if loaded
 let sharkReady = false;
 let sharkImage = new Image();
@@ -73,14 +81,14 @@ let render = function () {
             context.drawImage(shipImage, ship.x, ship.y);
         } else {
             context.drawImage(shipFlippedImage, ship.x, ship.y);
-        }
+        }``
     }
     if (sharkReady) {
         context.drawImage(sharkImage, shark.x, shark.y);
     }
     if (treasureReady) {
         context.drawImage(treasureImage, treasure1.x, treasure1.y);
-        context.drawImage(treasureImage, treasure2.x, treasure2.y);
+        context.drawImage(treasureImage_2, treasure2.x, treasure2.y);
     }
 
     // display player score
