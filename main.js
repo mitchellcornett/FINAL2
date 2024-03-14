@@ -179,13 +179,13 @@ let gameOver = function() {
     }
 
     if (treasureCaught > 1) {
-        gameOverHeader.innerText += "You found " + treasureCaught + " treasure chests. Refresh to play again.";
+        gameOverHeader.innerText += "You found " + treasureCaught + " treasure chests. \nRefresh to play again.";
     }
     else if (treasureCaught == 1) {
-        gameOverHeader.innerText += "You found " + treasureCaught + " treasure chest. Refresh to play again.";
+        gameOverHeader.innerText += "You found " + treasureCaught + " treasure chest. \nRefresh to play again.";
     }
     else {
-        gameOverHeader.innerText += "You didn't find any treasure chests. Refresh to play again.";
+        gameOverHeader.innerText += "You didn't find any treasure chests. \nRefresh to play again.";
     }
 
 
