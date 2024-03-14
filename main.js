@@ -101,12 +101,12 @@ let render = function () {
             context.drawImage(sharkFlippedImage, shark.x, shark.y);
         }
     }
-    if (treasureReady) {
+    if (treasureReady && treasureReady_2) {
         context.drawImage(treasureImage, treasure1.x, treasure1.y);
         context.drawImage(treasureImage_2, treasure2.x, treasure2.y);
     }
 
-    // display player score
+    // display player score and time remaining
     context.fillStyle = "rgb(250, 250, 250)";
     context.font = "24px Helvetica";
     context.textAlign = "left";
@@ -166,7 +166,7 @@ let timeRemaining = startingTime;
 
 let shipCaught = false;
 
-// show the user an alert when time runs out
+// show the user an alert when time runs out or user touches the shark
 let gameOver = function() {
 
     let gameOverHeader = document.createElement("h1")
@@ -192,6 +192,7 @@ let gameOver = function() {
     document.body.appendChild(gameOverHeader);
 }
 
+// count down time remaining every second
 let decreaseTimeRemaining = function() {
     
     setInterval(function() {
@@ -204,7 +205,7 @@ let decreaseTimeRemaining = function() {
     }, 1000);
 }
 
-// reset the game when treasure is caught
+// reset the game when page is loaded or refreshed
 let reset = function () {
     ship.x = (canvas.width / 2) - 16;
     ship.y = (canvas.height / 2) - 16;
