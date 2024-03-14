@@ -50,7 +50,7 @@ let treasureImage_2 = new Image();
 treasureImage_2.onload = function () {
     treasureReady_2 = true;
 };
-treasureImage_2.src = "images/chest_2.png";
+treasureImage_2.src = "images/chest-2.png";
 
 
 // create shark image and check if loaded
@@ -61,12 +61,22 @@ sharkImage.onload = function() {
 };
 sharkImage.src = "images/shark.png";
 
+let sharkFlippedReady = false;
+let sharkFlippedImage = new Image();
+sharkFlippedImage.onload = function() {
+    sharkFlippedReady = true;
+};
+sharkFlippedImage.src = "images/shark-flipped.png";
+
 // SOUNDS GO HERE
 let soundTreasure = "sounds/treasure.wav";
 let soundFx = document.getElementById("soundFX");
 
 // SHIP ORIENTATION
 let reverseShipSprite = false;
+
+// SHARK ORIENTATION
+let reverseSharkSprite = false;
 
 // draw everything in main render function
 let render = function () {
@@ -76,15 +86,20 @@ let render = function () {
     if (edgeReady) {
         context.drawImage(edgeImage, 0, 0);
     }
-    if (shipReady) {
+    if (shipReady && shipFlippedReady) {
         if (reverseShipSprite === false){
             context.drawImage(shipImage, ship.x, ship.y);
         } else {
             context.drawImage(shipFlippedImage, ship.x, ship.y);
-        }``
+        }
     }
-    if (sharkReady) {
-        context.drawImage(sharkImage, shark.x, shark.y);
+
+    if (sharkReady && sharkFlippedReady) {
+        if (reverseSharkSprite === false){
+            context.drawImage(sharkImage, shark.x, shark.y);
+        } else {
+            context.drawImage(sharkFlippedImage, shark.x, shark.y);
+        }
     }
     if (treasureReady) {
         context.drawImage(treasureImage, treasure1.x, treasure1.y);
@@ -299,6 +314,13 @@ let moveShark = function(modifier) {
     unitVector_y = vector_y / vector_magnitude;
     shark.x += unitVector_x * (shark.speed * modifier);
     shark.y += unitVector_y * (shark.speed * modifier);
+
+    // flip shark sprite if unit vector is positive x
+    if (unitVector_x >= 0){
+        reverseSharkSprite = true;
+    } else {
+        reverseSharkSprite = false;
+    }
 }
 
 // start the game
